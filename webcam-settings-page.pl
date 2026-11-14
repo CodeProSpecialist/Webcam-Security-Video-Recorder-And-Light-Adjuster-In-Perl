@@ -1535,17 +1535,16 @@ our $SUITE_COLUMNS = 3;
 # dark enough to read is dark enough to look like every other label, and one
 # light enough to look green is too light to read.
 #
-# Light fills with black on them, rather than deep fills with white: black
-# on these clears 11:1, which is roughly twice what white on a deep fill
-# managed, and it suits a grey page better than four dark blocks would. The
-# cost is that a pale fill is barely a shade off the card itself, so the
-# badge is given a thin solid border - without it the colour reads as a
-# smudge rather than as a tab.
+# The same four fills the Python window uses, with the same near-black
+# lettering on them: ACTIVE 10.4:1, PRETRAINED 12.5:1, TRAINED 8.3:1,
+# MISSING 8.1:1, against a 4.5:1 bar. One palette across both windows means
+# a badge means the same thing in either of them. The thin solid border
+# stays, so the badge reads as a tab against this page's grey.
 our %SUITE_STATE = (
-    ACTIVE     => '#8fe3a8',     # correcting the picture right now
-    TRAINED    => '#a9d2f7',     # on disk, ready, not the live one
-    PRETRAINED => '#ffdf9e',     # built from simulated light only
-    MISSING    => '#ffb3b3',     # nothing on disk for this preset
+    ACTIVE     => '#4ade80',     # correcting the picture right now
+    TRAINED    => '#67b7f7',     # on disk, ready, not the live one
+    PRETRAINED => '#ffd166',     # built from simulated light only
+    MISSING    => '#ff8c8c',     # nothing on disk for this preset
 );
 
 our %brain_suite;
@@ -1580,7 +1579,7 @@ sub build_brain_suite {
         $head->Label(-text => $title, -font => 'Helvetica 9 bold')
              ->pack(-side => 'left');
         my $state = $head->Label(-text => '...', -font => 'Helvetica 7 bold',
-                                 -fg => 'black', -padx => 5, -pady => 1,
+                                 -fg => '#10171e', -padx => 5, -pady => 1,
                                  -borderwidth => 1, -relief => 'solid');
         $state->pack(-side => 'right');
         my $body = $card->Label(-text => '', -anchor => 'w',
@@ -1676,9 +1675,9 @@ sub refresh_brain_suite {
             ($state, $lines) = ('MISSING', [$why]);
         }
         $ready++ unless $state eq 'MISSING';
-        # Black on the state's own colour. The fill is what carries the
-        # state at a glance; the word is there to say which one it is.
-        $card->{state}->configure(-text => " $state ", -fg => 'black',
+        # Near-black on the state's own colour. The fill is what carries
+        # the state at a glance; the word is there to say which one it is.
+        $card->{state}->configure(-text => " $state ", -fg => '#10171e',
                                   -bg => $SUITE_STATE{$state} || '#dddddd');
         $card->{body}->configure(-text => join("\n", @$lines));
     }
