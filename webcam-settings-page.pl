@@ -1529,9 +1529,13 @@ our @SUITE_BRAINS = (
 );
 our $SUITE_COLUMNS = 3;
 
-# The badge colours. Darker than the Python window's, because this page is
-# the system grey rather than a dark skin and the same greens would not be
-# readable on it.
+# The badge colours. These are the badge's BACKGROUND: the state is painted
+# as a filled tab with white lettering on it, rather than coloured text on
+# the card. Coloured text on this page's grey was the weak point - a mid
+# green or amber dark enough to read is dark enough to look like every other
+# label, and light enough to look green is too light to read. White on a
+# filled colour clears 5:1 on all four and reads as a badge from across the
+# room, which is the job.
 our %SUITE_STATE = (
     ACTIVE     => '#0a7a2a',     # correcting the picture right now
     TRAINED    => '#1a5fb4',     # on disk, ready, not the live one
@@ -1570,7 +1574,9 @@ sub build_brain_suite {
         my $head = $card->Frame->pack(-fill => 'x', -padx => 5, -pady => 1);
         $head->Label(-text => $title, -font => 'Helvetica 9 bold')
              ->pack(-side => 'left');
-        my $state = $head->Label(-text => '...', -font => 'Helvetica 7 bold');
+        my $state = $head->Label(-text => '...', -font => 'Helvetica 7 bold',
+                                 -fg => 'white', -padx => 5, -pady => 1,
+                                 -borderwidth => 0, -relief => 'flat');
         $state->pack(-side => 'right');
         my $body = $card->Label(-text => '', -anchor => 'w',
                                 -justify => 'left', -font => 'Courier 8');
@@ -1665,8 +1671,10 @@ sub refresh_brain_suite {
             ($state, $lines) = ('MISSING', [$why]);
         }
         $ready++ unless $state eq 'MISSING';
-        $card->{state}->configure(-text => $state,
-                                  -fg => $SUITE_STATE{$state} || '#333333');
+        # White on the state's own colour. The fill is what carries the
+        # state at a glance; the word is there to say which one it is.
+        $card->{state}->configure(-text => " $state ", -fg => 'white',
+                                  -bg => $SUITE_STATE{$state} || '#555555');
         $card->{body}->configure(-text => join("\n", @$lines));
     }
     my $total = scalar @SUITE_BRAINS;
