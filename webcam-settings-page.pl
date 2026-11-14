@@ -1530,17 +1530,22 @@ our @SUITE_BRAINS = (
 our $SUITE_COLUMNS = 3;
 
 # The badge colours. These are the badge's BACKGROUND: the state is painted
-# as a filled tab with white lettering on it, rather than coloured text on
-# the card. Coloured text on this page's grey was the weak point - a mid
-# green or amber dark enough to read is dark enough to look like every other
-# label, and light enough to look green is too light to read. White on a
-# filled colour clears 5:1 on all four and reads as a badge from across the
-# room, which is the job.
+# as a filled tab with BLACK lettering on it, rather than coloured text on
+# the card. Coloured text on this page's grey was the weak point - a green
+# dark enough to read is dark enough to look like every other label, and one
+# light enough to look green is too light to read.
+#
+# Light fills with black on them, rather than deep fills with white: black
+# on these clears 11:1, which is roughly twice what white on a deep fill
+# managed, and it suits a grey page better than four dark blocks would. The
+# cost is that a pale fill is barely a shade off the card itself, so the
+# badge is given a thin solid border - without it the colour reads as a
+# smudge rather than as a tab.
 our %SUITE_STATE = (
-    ACTIVE     => '#0a7a2a',     # correcting the picture right now
-    TRAINED    => '#1a5fb4',     # on disk, ready, not the live one
-    PRETRAINED => '#8a6100',     # built from simulated light only
-    MISSING    => '#a00000',     # nothing on disk for this preset
+    ACTIVE     => '#8fe3a8',     # correcting the picture right now
+    TRAINED    => '#a9d2f7',     # on disk, ready, not the live one
+    PRETRAINED => '#ffdf9e',     # built from simulated light only
+    MISSING    => '#ffb3b3',     # nothing on disk for this preset
 );
 
 our %brain_suite;
@@ -1575,8 +1580,8 @@ sub build_brain_suite {
         $head->Label(-text => $title, -font => 'Helvetica 9 bold')
              ->pack(-side => 'left');
         my $state = $head->Label(-text => '...', -font => 'Helvetica 7 bold',
-                                 -fg => 'white', -padx => 5, -pady => 1,
-                                 -borderwidth => 0, -relief => 'flat');
+                                 -fg => 'black', -padx => 5, -pady => 1,
+                                 -borderwidth => 1, -relief => 'solid');
         $state->pack(-side => 'right');
         my $body = $card->Label(-text => '', -anchor => 'w',
                                 -justify => 'left', -font => 'Courier 8');
@@ -1671,10 +1676,10 @@ sub refresh_brain_suite {
             ($state, $lines) = ('MISSING', [$why]);
         }
         $ready++ unless $state eq 'MISSING';
-        # White on the state's own colour. The fill is what carries the
+        # Black on the state's own colour. The fill is what carries the
         # state at a glance; the word is there to say which one it is.
-        $card->{state}->configure(-text => " $state ", -fg => 'white',
-                                  -bg => $SUITE_STATE{$state} || '#555555');
+        $card->{state}->configure(-text => " $state ", -fg => 'black',
+                                  -bg => $SUITE_STATE{$state} || '#dddddd');
         $card->{body}->configure(-text => join("\n", @$lines));
     }
     my $total = scalar @SUITE_BRAINS;
